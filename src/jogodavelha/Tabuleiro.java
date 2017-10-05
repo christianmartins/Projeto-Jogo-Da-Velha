@@ -13,9 +13,8 @@ public class Tabuleiro {
             System.out.println("\n");
         }
     }
-     
-    public void mover(String posicao, String jogadorAtual){
-            
+
+    public void mover(String posicao, String jogadorAtual){           
         for(int linha = 0; linha < 3; linha++){
             for(int coluna = 0; coluna < 3; coluna++){
                 if(m_Tabuleiro[linha][coluna].equals(posicao)){  
@@ -52,8 +51,7 @@ public class Tabuleiro {
             m_FimDeJogo = true;
         
         else if(m_Tabuleiro[0][2].equals(jogadorAtual)&& m_Tabuleiro[1][1].equals(jogadorAtual)&& m_Tabuleiro[2][0].equals(jogadorAtual))
-            m_FimDeJogo = true;
-      
+            m_FimDeJogo = true;     
     }
     
     public boolean valido(String posicao){
@@ -64,12 +62,10 @@ public class Tabuleiro {
            }
        }
        return false;
-    }
-                  
+    }             
     public boolean getFimDeJogo(){
         return m_FimDeJogo;
-    }
-    
+    }  
     public void setFimDeJogo(boolean fimDeJogo){
         this.m_FimDeJogo = fimDeJogo;
     }
