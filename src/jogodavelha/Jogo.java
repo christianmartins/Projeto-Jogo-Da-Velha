@@ -11,11 +11,11 @@ public class Jogo {
     private String m_Posicao;
     private boolean m_JogadaValida;
     private int m_JogadorAtual;
-    private int m_numeroDeRodada;
+    private int m_RumeroDeRodada;
     private boolean m_Empatou = false;
     private int m_NumueroDeEmpate;
-    
-    
+    private boolean m_Venceu = false;
+
     public Jogo(){
         menu();
         iniciarJogador();
@@ -23,7 +23,7 @@ public class Jogo {
     }
     
     public static void limparTela(){
-        System.out.println("\n\n\n\n\n");    
+        System.out.println("\n\n\n\n\n\n");    
     }
     
     public void iniciarJogador(){
@@ -65,7 +65,7 @@ public class Jogo {
         boolean finalizar = false;
         while(!finalizar){
             String menu;
-            System.out.println("1*--- Jogo da velha ---*\n"
+            System.out.println("*--- Jogo da velha ---*\n"
                     + "Digite a opção desejada\n"
                     + "1 - Melhor de 1\n"
                     + "2 - Melhor de 3\n"
@@ -75,15 +75,15 @@ public class Jogo {
             menu = sc.nextLine();
 
             if(menu.equals("1")){
-                m_numeroDeRodada = 1;
+                m_RumeroDeRodada = 1;
                 finalizar = true;
             }
             else if(menu.equals("2")){
-                m_numeroDeRodada = 1;
+                m_RumeroDeRodada = 3;
                 finalizar = true;
             }
             else if(menu.equals("3")){
-                m_numeroDeRodada = 1;
+                m_RumeroDeRodada = 5;
                 finalizar = true;
             }    
             else if(menu.equals("4")){
@@ -106,23 +106,26 @@ public class Jogo {
     
     public void jogar(){
         
-        for(int i = 0; i < m_numeroDeRodada; i++){
+        for(int i = 0; i < m_RumeroDeRodada; i++){
             
             m_Tabuleiro = new Tabuleiro(); 
             Jogo.limparTela();
+            m_Turno = 0;
             
             while(!m_Tabuleiro.getFimDeJogo()){
-
+                
                 if(m_Turno >= 9){
                     m_Empatou = true;
                     break;
                 }
+                m_JogadorAtual = m_Turno % 2 == 0 ? 0 : 1;
                 
                 placar(); 
                 m_Tabuleiro.mostrarTabuleiro();  
 
                 do{
-                    System.out.println("Digite sua jogada");
+                    System.out.println("Digite sua posição "
+                    +m_Jogador[m_JogadorAtual].getNome()+ ": ");
                     m_Posicao = sc.nextLine();
                     
                     if(!m_Tabuleiro.valido(m_Posicao)){
@@ -131,33 +134,44 @@ public class Jogo {
                     }
                     else                    
                         m_JogadaValida = true; 
-
                 }while(!m_JogadaValida);
-  
-                m_JogadorAtual = m_Turno % 2 == 0 ? 0 : 1;    
+       
                 m_Tabuleiro.mover(m_Posicao, m_Jogador[m_JogadorAtual].getSinal()); 
                 m_Tabuleiro.mostrarTabuleiro();
                 m_Turno++;
                 m_Tabuleiro.vencedor(m_Jogador[m_JogadorAtual].getSinal());
-                
-                System.out.println("Turno: " + m_Turno);
-                System.out.println("Nome do jogador: "+ m_Jogador[m_JogadorAtual].getNome());
-                System.out.println("Sinal: "+m_Jogador[m_JogadorAtual].getSinal());
+
                 System.out.println();
             }   
-            
-            m_Tabuleiro.mostrarTabuleiro();
             
             if(m_Empatou){
                 System.out.println("Deu velha!");
                 m_NumueroDeEmpate += 1;
             }
             else{
-                System.out.println("O "+ m_Jogador[m_JogadorAtual].getNome()+
-                " Venceu essa partida");
                 m_Jogador[m_JogadorAtual].setVitoria(1);
+                
+                if(m_RumeroDeRodada == 1){
+                    m_Venceu = true;
+                }
+                else if(m_RumeroDeRodada == 3){
+                    if(m_Jogador[m_JogadorAtual].getVitoria() >= 2){
+                        m_Venceu = true;
+                    }
+                }   
+                else if(m_RumeroDeRodada == 5){
+                    if(m_Jogador[m_JogadorAtual].getVitoria() >= 3){
+                        m_Venceu = true;
+                    }
+                }
+                 
             }
-            m_Turno = 0;
+            if(m_Venceu){    
+                placar();
+                m_Tabuleiro.mostrarTabuleiro();  
+                System.out.println("O "+ m_Jogador[m_JogadorAtual].getNome()+" venceu");
+                break;
+            }       
         }    
         
     }
