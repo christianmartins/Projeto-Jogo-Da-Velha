@@ -3,6 +3,7 @@ package jogodavelha;
 public class Jogador {
     private String m_Sinal;
     private String m_Nome;
+    private int m_Vitoria;
   
     public Jogador(String nome, String sinal){
         this.m_Nome = nome;
@@ -25,5 +26,10 @@ public class Jogador {
     public void setNome(String nome){
         this.m_Nome = nome;
     }  
-            
+    public int getVitoria(){
+        return m_Vitoria;
+    }
+    public void setVitoria(int vitoria){
+        this.m_Vitoria = vitoria + this.m_Vitoria;
+    }
 }

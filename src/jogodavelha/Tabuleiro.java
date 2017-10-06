@@ -6,9 +6,10 @@ public class Tabuleiro {
     private boolean m_FimDeJogo;
 
     public void mostrarTabuleiro(){
+        System.out.println("*--- Jogo da velha ---*");
         for(int linha = 0; linha < 3; linha++){
             for(int coluna = 0; coluna < 3; coluna++){
-                System.out.print(m_Tabuleiro[linha][coluna]+ "  |  ");
+                System.out.print(" | "+m_Tabuleiro[linha][coluna]+ " | ");
             }
             System.out.println("\n");
         }
@@ -62,7 +63,8 @@ public class Tabuleiro {
            }
        }
        return false;
-    }             
+    }    
+    
     public boolean getFimDeJogo(){
         return m_FimDeJogo;
     }  
