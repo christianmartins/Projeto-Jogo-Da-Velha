@@ -11,10 +11,11 @@ public class Jogo {
     private String m_Posicao;
     private boolean m_JogadaValida;
     private int m_JogadorAtual;
-    private int m_RumeroDeRodada;
+    private int m_NumeroDeRodada;
     private boolean m_Empatou = false;
-    private int m_NumueroDeEmpate;
+    private int m_NumeroDeEmpate;
     private boolean m_Venceu = false;
+    private boolean m_Desempatar = false;
 
     public Jogo(){
         menu();
@@ -75,15 +76,15 @@ public class Jogo {
             menu = sc.nextLine();
 
             if(menu.equals("1")){
-                m_RumeroDeRodada = 1;
+                m_NumeroDeRodada = 1;
                 finalizar = true;
             }
             else if(menu.equals("2")){
-                m_RumeroDeRodada = 3;
+                m_NumeroDeRodada = 3;
                 finalizar = true;
             }
             else if(menu.equals("3")){
-                m_RumeroDeRodada = 5;
+                m_NumeroDeRodada = 5;
                 finalizar = true;
             }    
             else if(menu.equals("4")){
@@ -101,12 +102,98 @@ public class Jogo {
         System.out.println(m_Jogador[0].getNome() 
         +"   "+m_Jogador[0].getVitoria()+" x "+m_Jogador[1].getVitoria()+"   "
         +m_Jogador[1].getNome());
-        System.out.println("Empate: "+ m_NumueroDeEmpate);
+        System.out.println("Empate: "+ m_NumeroDeEmpate);
+    }
+    
+    public void verificarNumeroDeVitorias(){
+        
+        if(m_NumeroDeRodada == 1){
+            m_Venceu = true;
+        }
+        else if(m_NumeroDeRodada == 3){
+            // Condição de vitoria para ambos jogadores
+            if(m_Jogador[m_JogadorAtual].getVitoria() >= 2){
+                m_Venceu = true;
+            }
+            
+            //Condição de vitoria do jogador 1
+            else if(m_Jogador[0].getVitoria() == 1 
+            && m_Jogador[1].getVitoria() == 0
+            && m_NumeroDeEmpate >= 2){
+                m_Venceu = true;
+            }
+            
+            //Condição de vitoria do jogador 2
+            else if(m_Jogador[1].getVitoria() == 1 
+            && m_Jogador[0].getVitoria() == 0
+            && m_NumeroDeEmpate >= 2){
+                m_Venceu = true;
+            }
+            
+            // Condição de vitoria para ambos jogadores
+            else if(m_Jogador[0].getVitoria() == 1 
+            && m_Jogador[1].getVitoria() == 1
+            && m_NumeroDeEmpate >= 1){
+                m_Desempatar = true;  
+            }         
+            else if(m_NumeroDeEmpate >= 3){
+                m_Desempatar = true;    
+            }
+        }   
+        else if(m_NumeroDeRodada == 5){
+            // Condição de vitoria para ambos jogadores
+            if(m_Jogador[m_JogadorAtual].getVitoria() >= 3){
+                m_Venceu = true;
+            }
+            
+            //Condição de vitoria do jogador 1
+            else if(m_Jogador[0].getVitoria() == 1 
+            && m_Jogador[1].getVitoria() == 0
+            && m_NumeroDeEmpate >= 4){
+                m_Venceu = true;
+            }
+            else if(m_Jogador[0].getVitoria() == 2 
+            && m_Jogador[1].getVitoria() == 0
+            && m_NumeroDeEmpate >= 3){
+                m_Venceu = true;
+            }
+            else if(m_Jogador[0].getVitoria() == 2 
+            && m_Jogador[1].getVitoria() == 1
+            && m_NumeroDeEmpate >= 2){
+                m_Venceu = true;
+            }
+            
+            //Condição de vitoria do jogador 2
+            else if(m_Jogador[1].getVitoria() == 1 
+            && m_Jogador[0].getVitoria() == 0
+            && m_NumeroDeEmpate >= 4){
+                m_Venceu = true;
+            }
+            else if(m_Jogador[1].getVitoria() == 2 
+            && m_Jogador[0].getVitoria() == 0
+            && m_NumeroDeEmpate >= 3){
+                m_Venceu = true;
+            }
+            else if(m_Jogador[1].getVitoria() == 2 
+            && m_Jogador[0].getVitoria() == 1
+            && m_NumeroDeEmpate >= 2){
+                m_Venceu = true;
+            }
+            // Condição de vitoria para ambos jogadores
+            else if(m_Jogador[0].getVitoria() == 2 
+            && m_Jogador[1].getVitoria() == 2
+            && m_NumeroDeEmpate >= 1){
+                m_Desempatar = true;  
+            }
+            else if(m_NumeroDeEmpate >= 5){
+                m_Desempatar = true;   
+            }
+        }   
     }
     
     public void jogar(){
         
-        for(int i = 0; i < m_RumeroDeRodada; i++){
+        for(int i = 0; i < m_NumeroDeRodada; i++){
             
             m_Tabuleiro = new Tabuleiro(); 
             Jogo.limparTela();
@@ -114,15 +201,21 @@ public class Jogo {
             
             while(!m_Tabuleiro.getFimDeJogo()){
                 
+                m_Empatou = false;
+                
                 if(m_Turno >= 9){
                     m_Empatou = true;
                     break;
                 }
-                m_JogadorAtual = m_Turno % 2 == 0 ? 0 : 1;
                 
+                m_JogadorAtual = m_Turno % 2 == 0 ? 0 : 1;          
                 placar(); 
+                
+                if(m_Desempatar){
+                    System.out.println("* ------ Desempate! ------ *");
+                }
                 m_Tabuleiro.mostrarTabuleiro();  
-
+                
                 do{
                     System.out.println("Digite sua posição "
                     +m_Jogador[m_JogadorAtual].getNome()+ ": ");
@@ -136,36 +229,29 @@ public class Jogo {
                         m_JogadaValida = true; 
                 }while(!m_JogadaValida);
        
-                m_Tabuleiro.mover(m_Posicao, m_Jogador[m_JogadorAtual].getSinal()); 
+                m_Tabuleiro.mover(m_Posicao, m_Jogador[m_JogadorAtual].getSinal());
+                placar();
                 m_Tabuleiro.mostrarTabuleiro();
                 m_Turno++;
                 m_Tabuleiro.vencedor(m_Jogador[m_JogadorAtual].getSinal());
 
                 System.out.println();
             }   
-            
+
             if(m_Empatou){
                 System.out.println("Deu velha!");
-                m_NumueroDeEmpate += 1;
+                m_NumeroDeEmpate += 1;
             }
             else{
-                m_Jogador[m_JogadorAtual].setVitoria(1);
-                
-                if(m_RumeroDeRodada == 1){
-                    m_Venceu = true;
-                }
-                else if(m_RumeroDeRodada == 3){
-                    if(m_Jogador[m_JogadorAtual].getVitoria() >= 2){
-                        m_Venceu = true;
-                    }
-                }   
-                else if(m_RumeroDeRodada == 5){
-                    if(m_Jogador[m_JogadorAtual].getVitoria() >= 3){
-                        m_Venceu = true;
-                    }
-                }
-                 
+                m_Jogador[m_JogadorAtual].setVitoria(1);     
             }
+            
+            verificarNumeroDeVitorias();
+            
+            if(m_Desempatar == true){
+                i -= 1; 
+            }
+            
             if(m_Venceu){    
                 placar();
                 m_Tabuleiro.mostrarTabuleiro();  
