@@ -14,7 +14,8 @@ public class Jogo {
     private int m_NumeroDeRodada;
     private boolean m_Empatou = false;
     private int m_NumeroDeEmpate;
-    private boolean m_Venceu = false;
+    private boolean m_JogadorVenceu1 = false;
+    private boolean m_JogadorVenceu2 = false;
     private boolean m_Desempatar = false;
 
     public Jogo(){
@@ -107,27 +108,36 @@ public class Jogo {
     
     public void verificarNumeroDeVitorias(){
         
-        if(m_NumeroDeRodada == 1){
-            m_Venceu = true;
+         if(m_NumeroDeRodada == 1){
+            if(m_Jogador[0].getVitoria() == 1 
+            && m_Jogador[1].getVitoria() == 0){
+                
+                m_JogadorVenceu1 = true;
+            }
+            if(m_Jogador[1].getVitoria() == 1 
+            && m_Jogador[0].getVitoria() == 0){
+                
+                m_JogadorVenceu2 = true;
+            }
         }
         else if(m_NumeroDeRodada == 3){
             // Condição de vitoria para ambos jogadores
             if(m_Jogador[m_JogadorAtual].getVitoria() >= 2){
-                m_Venceu = true;
+                m_JogadorVenceu1 = true;
             }
             
             //Condição de vitoria do jogador 1
             else if(m_Jogador[0].getVitoria() == 1 
             && m_Jogador[1].getVitoria() == 0
             && m_NumeroDeEmpate >= 2){
-                m_Venceu = true;
+                m_JogadorVenceu1 = true;
             }
             
             //Condição de vitoria do jogador 2
             else if(m_Jogador[1].getVitoria() == 1 
             && m_Jogador[0].getVitoria() == 0
             && m_NumeroDeEmpate >= 2){
-                m_Venceu = true;
+                m_JogadorVenceu2 = true;
             }
             
             // Condição de vitoria para ambos jogadores
@@ -143,41 +153,41 @@ public class Jogo {
         else if(m_NumeroDeRodada == 5){
             // Condição de vitoria para ambos jogadores
             if(m_Jogador[m_JogadorAtual].getVitoria() >= 3){
-                m_Venceu = true;
+                m_JogadorVenceu1 = true;
             }
             
             //Condição de vitoria do jogador 1
             else if(m_Jogador[0].getVitoria() == 1 
             && m_Jogador[1].getVitoria() == 0
             && m_NumeroDeEmpate >= 4){
-                m_Venceu = true;
+                m_JogadorVenceu1 = true;
             }
             else if(m_Jogador[0].getVitoria() == 2 
             && m_Jogador[1].getVitoria() == 0
             && m_NumeroDeEmpate >= 3){
-                m_Venceu = true;
+                m_JogadorVenceu1 = true;
             }
             else if(m_Jogador[0].getVitoria() == 2 
             && m_Jogador[1].getVitoria() == 1
             && m_NumeroDeEmpate >= 2){
-                m_Venceu = true;
+                m_JogadorVenceu1 = true;
             }
             
             //Condição de vitoria do jogador 2
             else if(m_Jogador[1].getVitoria() == 1 
             && m_Jogador[0].getVitoria() == 0
             && m_NumeroDeEmpate >= 4){
-                m_Venceu = true;
+                m_JogadorVenceu2 = true;
             }
             else if(m_Jogador[1].getVitoria() == 2 
             && m_Jogador[0].getVitoria() == 0
             && m_NumeroDeEmpate >= 3){
-                m_Venceu = true;
+                m_JogadorVenceu2 = true;
             }
             else if(m_Jogador[1].getVitoria() == 2 
             && m_Jogador[0].getVitoria() == 1
             && m_NumeroDeEmpate >= 2){
-                m_Venceu = true;
+                m_JogadorVenceu1 = true;
             }
             // Condição de vitoria para ambos jogadores
             else if(m_Jogador[0].getVitoria() == 2 
@@ -252,12 +262,18 @@ public class Jogo {
                 i -= 1; 
             }
             
-            if(m_Venceu){    
+            if(m_JogadorVenceu1){    
                 placar();
                 m_Tabuleiro.mostrarTabuleiro();  
-                System.out.println("O "+ m_Jogador[m_JogadorAtual].getNome()+" venceu");
+                System.out.println("O "+ m_Jogador[0].getNome()+" venceu");
                 break;
-            }       
+            }    
+            else if(m_JogadorVenceu2){    
+                placar();
+                m_Tabuleiro.mostrarTabuleiro();  
+                System.out.println("O "+ m_Jogador[1].getNome()+" venceu");
+                break;
+            }           
         }    
         
     }
